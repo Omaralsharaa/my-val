@@ -24,9 +24,6 @@
         * {
             box-sizing: border-box;
         }
-<audio id="bgMusic" preload="auto">
-    <source src="love.mp3" type="audio/mpeg">
-</audio>
 
         body {
             font-family: 'Nunito', sans-serif;
@@ -267,27 +264,6 @@
         <p class="msg">See you soon, my Chiika
              🩷</p>
     </div>
-    <script>
-    const bgMusic = document.getElementById("bgMusic");
-    let musicStarted = false;
-
-    function startMusic() {
-        if (musicStarted) return;
-        bgMusic.volume = 0.6;
-        bgMusic.play().catch(() => {});
-        musicStarted = true;
-    }
-
-    // start music on first interaction
-    document.addEventListener("touchstart", startMusic, { once: true });
-    document.addEventListener("click", startMusic, { once: true });
-
-    // also guarantee it starts when YES is pressed
-    yesBtn.addEventListener("click", () => {
-        startMusic();
-        acceptLove();
-    });
-</script>
 
     <!-- Load Tenor ONCE -->
     <script async src="https://tenor.com/embed.js"></script>
@@ -423,9 +399,6 @@
 
         yesBtn.addEventListener("click", acceptLove);
     </script>
-    
 </body>
 
 </html>
-
-

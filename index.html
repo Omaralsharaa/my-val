@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Valentine?</title>
+
+    <style>
+        :root {
+            --bg1: #ffe3ef;
+            --bg2: #e6f4ff;
+            --card: rgba(255, 255, 255, .72);
+            --stroke: rgba(255, 255, 255, .55);
+            --shadow: 0 18px 60px rgba(0, 0, 0, .12);
+            --text: #1f2937;
+            --muted: #6b7280;
+            --pink: #ff4d8d;
+            --pink2: #ff7bb0;
+            --blue: #4aa3ff;
+            --blue2: #8fd0ff;
+            --good: #22c55e;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            min-height: 100svh;
+            font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", Arial, sans-serif;
+            color: var(--text);
+            overflow: hidden;
+            background:
+                radial-gradient(1200px 800px at 20% 15%, var(--bg2), transparent 55%),
+                radial-gradient(1200px 800px at 80% 20%, var(--bg1), transparent 55%),
+                radial-gradient(900px 700px at 50% 85%, #fff1c8, transparent 55%),
+                linear-gradient(135deg, #fff7fb, #f5fbff);
+        }
+
+        /* Soft moving light */
+        .glow {
+            position: fixed;
+            inset: -30vmax;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 77, 141, .18), transparent 40%),
+                radial-gradient(circle at 70% 40%, rgba(74, 163, 255, .16), transparent 42%),
+                radial-gradient(circle at 50% 70%, rgba(255, 208, 122, .14), transparent 45%);
+            filter: blur(18px);
+            animation: drift 10s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        @keyframes drift {
+            from {
+                transform: translate3d(-2%, -1%, 0) scale(1.02);
+            }
+
+            to {
+                transform: translate3d(2%, 1%, 0) scale(1.05);
+            }
+        }
+
+        /* Floating hearts */
+        .hearts {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .heart {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            transform: rotate(45deg);
+            opacity: .55;
+            background: linear-gradient(180deg, var(--pink2), var(--pink));
+            border-radius: 4px;
+            animation: floatUp linear forwards;
+            box-shadow: 0 10px 30px rgba(255, 77, 141, .18);
+        }
+
+        .heart::before,
+        .heart::after {
+            content: "";
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            background: inherit;
+            border-radius: 50%;
+            top: -7px;
+            left: 0;
+        }
+
+        .heart::after {
+            top: 0;
+            left: -7px;
+        }
+
+        @keyframes floatUp {
+            from {
+                transform: translateY(0) rotate(45deg) scale(.95);
+                opacity: .0;
+            }
+
+            10% {
+                opacity: .55;
+            }
+
+            to {
+                transform: translateY(-120svh) rotate(45deg) scale(1.15);
+                opacity: 0;
+            }
+        }
+
+        .wrap {
+            position: relative;
+            height: 100svh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: max(16px, env(safe-area-inset-top)) 16px max(20px, env(safe-area-inset-bottom));
+        }
+
+        .card {
+            width: min(520px, 94vw);
+            background: var(--card);
+            border: 1px solid rgba(255, 255, 255, .65);
+            border-top: 1px solid rgba(255, 255, 255, .9);
+            backdrop-filter: blur(12px);
+            border-radius: 22px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .top {
+            padding: 18px 18px 0;
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .6);
+            border: 1px solid rgba(255, 255, 255, .7);
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: linear-gradient(180deg, var(--pink2), var(--pink));
+            box-shadow: 0 0 0 4px rgba(255, 77, 141, .12);
+        }
+
+        .content {
+            padding: 14px 18px 18px;
+        }
+
+        h1 {
+            margin: 10px 0 6px;
+            font-size: clamp(22px, 5vw, 30px);
+            letter-spacing: -0.02em;
+        }
+
+        p {
+            margin: 0 0 14px;
+            line-height: 1.45;
+            color: var(--muted);
+            font-size: 15px;
+        }
+
+        .scene {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 10px 10px 2px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, .55);
+            border: 1px solid rgba(255, 255, 255, .7);
+            overflow: hidden;
+            position: relative;
+            min-height: 210px;
+        }
+
+        .scene::before {
+            content: "";
+            position: absolute;
+            inset: -40px -20px auto -20px;
+            height: 160px;
+            background: radial-gradient(circle at 30% 60%, rgba(255, 77, 141, .18), transparent 55%),
+                radial-gradient(circle at 70% 55%, rgba(74, 163, 255, .16), transparent 55%);
+            filter: blur(6px);
+        }
+
+        .label {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            font-size: 12px;
+            color: rgba(107, 114, 128, .95);
+            background: rgba(255, 255, 255, .65);
+            border: 1px solid rgba(255, 255, 255, .8);
+            padding: 7px 10px;
+            border-radius: 999px;
+            z-index: 2;
+        }
+
+        .chip {
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-weight: 700;
+            color: white;
+            background: linear-gradient(180deg, var(--pink2), var(--pink));
+            font-size: 11px;
+        }
+
+        .chip.blue {
+            background: linear-gradient(180deg, var(--blue2), var(--blue));
+        }
+
+        .characters {
+            position: relative;
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding: 18px 10px 0;
+            z-index: 1;
+        }
+
+        .char {
+            width: 46%;
+            max-width: 220px;
+            filter: drop-shadow(0 14px 22px rgba(0, 0, 0, .12));
+            transform-origin: center bottom;
+            animation: bob 2.6s ease-in-out infinite;
+        }
+
+        .char.right {
+            animation-delay: .35s;
+        }
+
+        @keyframes bob {
+
+            0%,
+            100% {
+                transform: translateY(0)
+            }
+
+            50% {
+                transform: translateY(-6px)
+            }
+        }
+
+        .speech {
+            position: absolute;
+            bottom: 144px;
+            max-width: 220px;
+            padding: 10px 12px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, .82);
+            border: 1px solid rgba(255, 255, 255, .9);
+            color: #374151;
+            font-size: 13px;
+            line-height: 1.25;
+            box-shadow: 0 10px 26px rgba(0, 0, 0, .08);
+            z-index: 2;
+        }
+
+        .speech.left {
+            left: 12px;
+        }
+
+        .speech.right {
+            right: 12px;
+        }
+
+        .speech::after {
+            content: "";
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            background: inherit;
+            border: 1px solid rgba(255, 255, 255, .9);
+            border-left: none;
+            border-top: none;
+            transform: rotate(45deg);
+            bottom: -8px;
+        }
+
+        .speech.left::after {
+            left: 22px;
+        }
+
+        .speech.right::after {
+            right: 22px;
+        }
+
+        .actions {
+            margin-top: 14px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            height: 56px;
+        }
+
+        button {
+            appearance: none;
+            border: none;
+            border-radius: 14px;
+            padding: 13px 16px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            user-select: none;
+            touch-action: manipulation;
+            min-width: 140px;
+            transition: transform .12s ease, filter .12s ease;
+        }
+
+        button:active {
+            transform: scale(.98);
+        }
+
+        #yesBtn {
+            color: white;
+            background: linear-gradient(180deg, var(--pink2), var(--pink));
+            box-shadow: 0 14px 30px rgba(255, 77, 141, .25);
+        }
+
+        #yesBtn:hover {
+            filter: brightness(1.02);
+        }
+
+        #noBtn {
+            color: white;
+            background: linear-gradient(180deg, #aab3be, #8a94a3);
+            box-shadow: 0 14px 30px rgba(17, 24, 39, .12);
+            position: absolute;
+            left: 50%;
+            transform: translateX(40px);
+        }
+
+        .footer {
+            margin-top: 12px;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            color: rgba(107, 114, 128, .9);
+            font-size: 12px;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            background: rgba(0, 0, 0, .25);
+            backdrop-filter: blur(6px);
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modalCard {
+            width: min(520px, 94vw);
+            background: rgba(255, 255, 255, .86);
+            border: 1px solid rgba(255, 255, 255, .9);
+            border-radius: 22px;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, .25);
+            overflow: hidden;
+        }
+
+        .modalTop {
+            padding: 18px 18px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .close {
+            width: 40px;
+            height: 40px;
+            border-radius: 14px;
+            background: rgba(0, 0, 0, .06);
+            border: 1px solid rgba(0, 0, 0, .06);
+            font-size: 18px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .modalBody {
+            padding: 12px 18px 18px;
+        }
+
+        .success {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 8px 0 8px;
+        }
+
+        .check {
+            width: 38px;
+            height: 38px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            background: rgba(34, 197, 94, .14);
+            border: 1px solid rgba(34, 197, 94, .22);
+            color: var(--good);
+            font-weight: 900;
+            font-size: 18px;
+        }
+
+        .modalActions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 14px;
+        }
+
+        .secondary {
+            background: rgba(0, 0, 0, .06);
+            color: #111827;
+            box-shadow: none;
+            border: 1px solid rgba(0, 0, 0, .06);
+            font-weight: 800;
+        }
+
+        .primaryBlue {
+            color: white;
+            background: linear-gradient(180deg, var(--blue2), var(--blue));
+            box-shadow: 0 14px 30px rgba(74, 163, 255, .22);
+        }
+
+        @media (max-width: 380px) {
+            button {
+                min-width: 126px;
+            }
+
+            .speech {
+                max-width: 190px;
+                font-size: 12px;
+            }
+
+            .scene {
+                min-height: 200px;
+            }
+
+            #noBtn {
+                transform: translateX(28px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="glow"></div>
+    <div class="hearts" id="hearts"></div>
+
+    <div class="wrap">
+        <div class="card">
+            <div class="top">
+                <div class="badge">
+                    <span class="dot"></span>
+                    Chiikawa + Hachiware mode
+                </div>
+                <div class="badge" id="dateBadge">Feb 14 💘</div>
+            </div>
+
+            <div class="content">
+                <h1>Will you be my Valentine?</h1>
+                <p>
+                    You are my Chiikawa 🩷 and I’m your Hachiware 💙
+                    <br />
+                    One tap and it’s official.
+                </p>
+
+                <div class="scene" id="scene">
+                    <div class="label">
+                        <span class="chip">Chiikawa</span>
+                        <span class="chip blue">Hachiware</span>
+                        <span>tiny promise: lots of hugs</span>
+                    </div>
+
+                    <div class="speech left" id="bubbleLeft">If you say yes, I’ll be extra cute 🥺</div>
+                    <div class="speech right" id="bubbleRight">I already picked you 💙</div>
+
+                    <div class="characters">
+                        <!-- Cute "Chiikawa-style" chibi SVG (original, simple) -->
+                        <svg class="char left" viewBox="0 0 240 240" aria-label="Chiikawa">
+                            <!-- body -->
+                            <ellipse cx="120" cy="165" rx="70" ry="55" fill="#ffffff" stroke="#e8e8e8"
+                                stroke-width="3" />
+                            <!-- head -->
+                            <ellipse cx="120" cy="105" rx="82" ry="70" fill="#ffffff" stroke="#e8e8e8"
+                                stroke-width="3" />
+                            <!-- ears -->
+                            <ellipse cx="70" cy="52" rx="26" ry="22" fill="#ffffff" stroke="#e8e8e8" stroke-width="3" />
+                            <ellipse cx="170" cy="52" rx="26" ry="22" fill="#ffffff" stroke="#e8e8e8"
+                                stroke-width="3" />
+                            <!-- blush -->
+                            <ellipse cx="70" cy="118" rx="18" ry="12" fill="#ffd1e2" opacity=".9" />
+                            <ellipse cx="170" cy="118" rx="18" ry="12" fill="#ffd1e2" opacity=".9" />
+                            <!-- eyes -->
+                            <circle cx="92" cy="105" r="10" fill="#111827" />
+                            <circle cx="148" cy="105" r="10" fill="#111827" />
+                            <circle cx="89" cy="102" r="3" fill="#ffffff" opacity=".9" />
+                            <circle cx="145" cy="102" r="3" fill="#ffffff" opacity=".9" />
+                            <!-- mouth -->
+                            <path d="M110 130 Q120 138 130 130" fill="none" stroke="#111827" stroke-width="4"
+                                stroke-linecap="round" />
+                            <!-- tiny paws -->
+                            <ellipse cx="85" cy="172" rx="16" ry="10" fill="#ffffff" stroke="#e8e8e8"
+                                stroke-width="3" />
+                            <ellipse cx="155" cy="172" rx="16" ry="10" fill="#ffffff" stroke="#e8e8e8"
+                                stroke-width="3" />
+                            <!-- heart -->
+                            <g transform="translate(120 150)">
+                                <path
+                                    d="M0 14 C -14 2 -22 -6 -18 -16 C -14 -28 0 -22 0 -12 C 0 -22 14 -28 18 -16 C 22 -6 14 2 0 14 Z"
+                                    fill="url(#gradPink)" />
+                            </g>
+                            <defs>
+                                <linearGradient id="gradPink" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0" stop-color="#ff7bb0" />
+                                    <stop offset="1" stop-color="#ff4d8d" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+
+                        <!-- Cute "Hachiware-style" chibi SVG (original, simple) -->
+                        <svg class="char right" viewBox="0 0 240 240" aria-label="Hachiware">
+                            <!-- body -->
+                            <ellipse cx="120" cy="165" rx="70" ry="55" fill="#ffffff" stroke="#e8e8e8"
+                                stroke-width="3" />
+                            <!-- head base -->
+                            <ellipse cx="120" cy="105" rx="82" ry="70" fill="#ffffff" stroke="#e8e8e8"
+                                stroke-width="3" />
+                            <!-- blue head cap -->
+                            <path d="M40 105 C45 60 80 38 120 38 C160 38 195 60 200 105
+                       C170 96 140 92 120 92 C100 92 70 96 40 105 Z" fill="#7ec7ff" opacity=".95" />
+                            <!-- ears -->
+                            <ellipse cx="70" cy="52" rx="26" ry="22" fill="#7ec7ff" opacity=".95" />
+                            <ellipse cx="170" cy="52" rx="26" ry="22" fill="#7ec7ff" opacity=".95" />
+                            <!-- face stripe -->
+                            <path d="M120 80 C120 96 120 112 120 128" stroke="#6fbfff" stroke-width="10"
+                                stroke-linecap="round" opacity=".9" />
+                            <!-- cheeks -->
+                            <ellipse cx="72" cy="118" rx="18" ry="12" fill="#cfe9ff" opacity=".95" />
+                            <ellipse cx="168" cy="118" rx="18" ry="12" fill="#cfe9ff" opacity=".95" />
+                            <!-- eyes -->
+                            <circle cx="92" cy="105" r="10" fill="#111827" />
+                            <circle cx="148" cy="105" r="10" fill="#111827" />
+                            <circle cx="89" cy="102" r="3" fill="#ffffff" opacity=".9" />
+                            <circle cx="145" cy="102" r="3" fill="#ffffff" opacity=".9" />
+                            <!-- mouth -->
+                            <path d="M110 132 Q120 140 130 132" fill="none" stroke="#111827" stroke-width="4"
+                                stroke-linecap="round" />
+                            <!-- tiny paws -->
+                            <ellipse cx="85" cy="172" rx="16" ry="10" fill="#ffffff" stroke="#e8e8e8"
+                                stroke-width="3" />
+                            <ellipse cx="155" cy="172" rx="16" ry="10" fill="#ffffff" stroke="#e8e8e8"
+                                stroke-width="3" />
+                            <!-- sparkle -->
+                            <g transform="translate(176 148)" opacity=".95">
+                                <path d="M10 0 L13 8 L22 10 L13 12 L10 22 L8 12 L0 10 L8 8 Z" fill="#4aa3ff" />
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="actions" id="actions">
+                    <button id="yesBtn">Yes 💕</button>
+                    <button id="noBtn">No 🙃</button>
+                </div>
+
+                <div class="footer">
+                    <span id="hint">Tip: try tapping “No” 😇</span>
+                    <span id="counter">Attempts: 0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modalCard">
+            <div class="modalTop">
+                <div class="badge">
+                    <span class="dot"></span>
+                    It’s official 💘
+                </div>
+                <button class="close" id="closeBtn">✕</button>
+            </div>
+            <div class="modalBody">
+                <div class="success">
+                    <div class="check">✓</div>
+                    <div>
+                        <div style="font-weight:900; font-size:18px;">Yayyy!</div>
+                        <div style="color:var(--muted); font-size:14px; margin-top:2px;">
+                            Chiikawa + Hachiware Valentine team unlocked.
+                        </div>
+                    </div>
+                </div>
+
+                <p style="margin-top:10px;">
+                    I’m really happy ❤️
+                    <br />
+                    I can’t wait to spend Valentine’s Day with you.
+                </p>
+
+                <div class="modalActions">
+                    <button class="primaryBlue" id="calendarBtn">Add to Calendar 📅</button>
+                    <button class="secondary" id="copyBtn">Copy a cute message ✍️</button>
+                </div>
+
+                <p style="margin-top:12px; font-size:12px; color:rgba(107,114,128,.95);">
+                    If the calendar download doesn’t open directly on iPhone, tap the file and choose Calendar.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Floating hearts
+        const hearts = document.getElementById("hearts");
+        function spawnHeart() {
+            const h = document.createElement("div");
+            h.className = "heart";
+            const left = Math.random() * 100;
+            const size = 10 + Math.random() * 14;
+            const dur = 4.5 + Math.random() * 4.5;
+            const delay = Math.random() * 0.6;
+
+            h.style.left = left + "vw";
+            h.style.bottom = "-20px";
+            h.style.width = size + "px";
+            h.style.height = size + "px";
+            h.style.animationDuration = dur + "s";
+            h.style.animationDelay = delay + "s";
+            h.style.opacity = (0.25 + Math.random() * 0.45).toFixed(2);
+
+            hearts.appendChild(h);
+            setTimeout(() => h.remove(), (dur + delay) * 1000 + 200);
+        }
+        setInterval(spawnHeart, 380);
+
+        // Buttons
+        const yesBtn = document.getElementById("yesBtn");
+        const noBtn = document.getElementById("noBtn");
+        const counter = document.getElementById("counter");
+        const hint = document.getElementById("hint");
+        const bubbleLeft = document.getElementById("bubbleLeft");
+        const bubbleRight = document.getElementById("bubbleRight");
+        const scene = document.getElementById("scene");
+
+        let tries = 0;
+
+        function moveNoButton() {
+            tries++;
+            counter.textContent = "Attempts: " + tries;
+
+            const rect = scene.getBoundingClientRect();
+            const btnW = noBtn.offsetWidth;
+            const btnH = noBtn.offsetHeight;
+
+            // Keep it inside the card area near the buttons
+            const areaLeft = rect.left + 24;
+            const areaRight = rect.right - btnW - 24;
+            const areaTop = rect.bottom - 88;     // near bottom
+            const areaBottom = rect.bottom - 24;
+
+            const x = areaLeft + Math.random() * (areaRight - areaLeft);
+            const y = areaTop + Math.random() * (areaBottom - areaTop);
+
+            noBtn.style.left = (x - rect.left) + "px";
+            noBtn.style.top = (y - (rect.bottom - 56)) + "px"; // relative-ish
+            noBtn.style.transform = "translate(0,0)";
+
+            // Cute changing lines
+            if (tries === 1) {
+                hint.textContent = "Okay okay, you’re fast 😳";
+                bubbleLeft.textContent = "Eeeh?! You almost tapped it!";
+                bubbleRight.textContent = "She’s too powerful 💙";
+            } else if (tries === 3) {
+                bubbleLeft.textContent = "Pls choose YES 🥺";
+                bubbleRight.textContent = "I’m literally right here 😭";
+            } else if (tries === 6) {
+                hint.textContent = "At this point you really want YES 😇";
+                bubbleLeft.textContent = "We are a Valentine team, right?";
+                bubbleRight.textContent = "Say yes and I’ll celebrate 💙";
+            } else if (tries >= 10) {
+                bubbleLeft.textContent = "I’ll stop running if you say YES 😌";
+                bubbleRight.textContent = "Yes button is very nice";
+            }
+        }
+
+        // iPhone: use touchstart
+        noBtn.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            moveNoButton();
+        }, { passive: false });
+
+        // Desktop fallback
+        noBtn.addEventListener("mouseover", moveNoButton);
+
+        // Modal success
+        const modal = document.getElementById("modal");
+        const closeBtn = document.getElementById("closeBtn");
+        yesBtn.addEventListener("click", () => {
+            // Tiny confetti burst
+            for (let i = 0; i < 18; i++) spawnHeart();
+            modal.classList.add("show");
+        });
+        closeBtn.addEventListener("click", () => modal.classList.remove("show"));
+        modal.addEventListener("click", (e) => {
+            if (e.target === modal) modal.classList.remove("show");
+        });
+
+        // Copy message
+        const copyBtn = document.getElementById("copyBtn");
+        copyBtn.addEventListener("click", async () => {
+            const msg = "My Chiikawa 🩷, will you be my Valentine? I’m your Hachiware 💙";
+            try {
+                await navigator.clipboard.writeText(msg);
+                copyBtn.textContent = "Copied ✅";
+                setTimeout(() => copyBtn.textContent = "Copy a cute message ✍️", 1400);
+            } catch {
+                // If clipboard blocked
+                alert(msg);
+            }
+        });
+
+        // Calendar (.ics)
+        const calendarBtn = document.getElementById("calendarBtn");
+        calendarBtn.addEventListener("click", () => {
+            // Set Valentine date (Feb 14). Adjust year if needed.
+            const now = new Date();
+            const year = now.getFullYear();
+            const dtStart = new Date(year, 1, 14, 18, 0, 0); // Feb is 1
+            const dtEnd = new Date(year, 1, 14, 22, 0, 0);
+
+            function toICSDate(d) {
+                // local time, formatted as YYYYMMDDTHHMMSS
+                const pad = (n) => String(n).padStart(2, "0");
+                return d.getFullYear() +
+                    pad(d.getMonth() + 1) +
+                    pad(d.getDate()) + "T" +
+                    pad(d.getHours()) +
+                    pad(d.getMinutes()) +
+                    pad(d.getSeconds());
+            }
+
+            const uid = "valentine-" + Math.random().toString(16).slice(2) + "@chiikawa-hachiware";
+            const ics =
+                `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Valentine//ChiikawaHachiware//EN
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:${uid}
+DTSTAMP:${toICSDate(new Date())}
+DTSTART:${toICSDate(dtStart)}
+DTEND:${toICSDate(dtEnd)}
+SUMMARY:Valentine Date 💘 (Chiikawa + Hachiware)
+DESCRIPTION:Official Valentine date ❤️
+END:VEVENT
+END:VCALENDAR`;
+
+            const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "valentine.ics";
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+
+            setTimeout(() => URL.revokeObjectURL(url), 1500);
+            calendarBtn.textContent = "Downloaded ✅";
+            setTimeout(() => calendarBtn.textContent = "Add to Calendar 📅", 1600);
+        });
+
+        // Date badge: show current year
+        const dateBadge = document.getElementById("dateBadge");
+        const y = new Date().getFullYear();
+        dateBadge.textContent = "Feb 14, " + y + " 💘";
+    </script>
+</body>
+
+</html>
